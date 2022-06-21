@@ -3,6 +3,7 @@ import Breakout from "./Breakout";
 import Frogger from "./Frogger";
 import SpaceInvaders from "./SpaceInvaders";
 import WhacAMole from "./Whac-A-Mole";
+import background from "../arcade.jfif"
 
 const Home = () => {
 
@@ -19,8 +20,9 @@ const Home = () => {
 }
 
 const Container = styled.div`
-background-image: url('../arcade.jfif');
-background-size: 100px 100px;
+background-image: url(${background});
+background-repeat: no-repeat;
+background-size: 70% 70%;
 margin: 0;
 
 `
