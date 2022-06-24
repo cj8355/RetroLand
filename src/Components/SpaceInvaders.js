@@ -68,88 +68,102 @@ const draw = () => {
         }
         
     }
+    
 }
+
 
 draw()
 
+ 
+squares[currentShooterIndex].className = ('shooter')
+
 // removing the invader class from a square in the grid, invader will no longer show up on the page
 const remove = () => {
-    // for (let i = 0; i < alienInvaders.length; i++) {
-    //     squares[alienInvaders[i]].classList.remove('invader')
-    //     // console.log(squares)
-    // }
+    for (let i = 0; i < alienInvaders.length; i++) {
+
+        squares[alienInvaders[i]].classList.remove('invader')
+        // console.log(squares)
+    }
 }
 
 // adding the user controlled shooter to the grid
-squares[currentShooterIndex].className = 'shooter'
+// squares[currentShooterIndex].className = 'shooter'
 
 // controls the left and right movement of the shooter, moves the shooter class from one square in the grid to another
 const moveShooter = (e)  => {
-    // squares[currentShooterIndex].classList.remove('invader')
+    console.log(squares)
+    // squares[currentShooterIndex].className = ('default')
+    squares[currentShooterIndex].classList.remove('shooter')
     switch(e.key) {
         case 'ArrowLeft':
-            if (currentShooterIndex % width !== 0) currentShooterIndex -= 1
+            if (currentShooterIndex % width !== 0) setCurrentShooterIndex(prevState => prevState - 1)
+            // currentShooterIndex -= 1
             break
         case 'ArrowRight':
-            if (currentShooterIndex % width < width -1) currentShooterIndex += 1
+            if (currentShooterIndex % width < width -1) setCurrentShooterIndex(prevState => prevState + 1)
+            // currentShooterIndex += 1
             break      
     }
     // adding the shooter class to make it appear as if the shooter is moving
     // squares[currentShooterIndex].classList.add('shooter')
     // console.log(squares[currentShooterIndex])
-    console.log(Shooter.index)
+    console.log(currentShooterIndex)
 }
 
 // event listener to listen if the user moves the shooter
+
+useEffect(() => {
+    window.addEventListener('keydown', moveShooter)
+}, [])
 // document.addEventListener('keydown', moveShooter)
 
 // invaders move to the right and then down 1 and to the left then down 1 and to the right...
 const moveInvaders = () => {
     const leftEdge = alienInvaders[0] % width === 0
     const rightEdge = alienInvaders[alienInvaders.length - 1] % width === width - 1
-    // remove()
+    remove()
 
-    // reverse the direction of the invaders once they get to the right edge of the grid div
-    // if (rightEdge && goingRight) {
-    //     for (let i = 0; i < alienInvaders.length; i++) {
-    //         alienInvaders[i] += width +1
-    //         direction = -1
-    //         goingRight = false
-    //     }
-    // }
+    //reverse the direction of the invaders once they get to the right edge of the grid div
+    if (rightEdge && goingRight) {
+        for (let i = 0; i < alienInvaders.length; i++) {
+            alienInvaders[i] += width +1
+            direction = -1
+            goingRight = false
+        }
+    }
 
-    // // 
-    // if (leftEdge && !goingRight) {
-    //     for (let i = 0; i < alienInvaders.length; i++) {
-    //         alienInvaders[i] += width -1
-    //         direction = 1
-    //         goingRight = true
-    //     }
-    // }
+    // 
+    if (leftEdge && !goingRight) {
+        for (let i = 0; i < alienInvaders.length; i++) {
+            alienInvaders[i] += width -1
+            direction = 1
+            goingRight = true
+        }
+    }
 
-    // for (let i = 0; i < alienInvaders.length; i++) {
-    //     alienInvaders[i] += direction
-    // }
-    // draw()
+    for (let i = 0; i < alienInvaders.length; i++) {
+        alienInvaders[i] += direction
+    }
+    draw()
 
-    // shooter loses if the invaders make it down to the shooters row and an invader occupies the same square as the shooter
-    // if (squares[currentShooterIndex].classList.contains('invader', 'shooter')) {
-    //     // resultsDisplay.innerHTML = 'GAME OVER'
-    //     console.log('game over')
-    //     clearInterval(invadersId)
-    // }
+    //shooter loses if the invaders make it down to the shooters row and an invader occupies the same square as the shooter
+    if (squares[currentShooterIndex].classList.contains('invader', 'shooter')) {
+        // resultsDisplay.innerHTML = 'GAME OVER'
+        console.log('game over')
+        clearInterval(invadersId)
+    }
 
-    // ends the game if the invaders make it to the bottom of the grid
-    // for (let i = 0; i < alienInvaders.length; i++) {
-    //     if (alienInvaders[i] > squares.length ) {
-    //         // resultsDisplay.innerHTML = 'GAME OVER'
-    //         clearInterval(invadersId)
-    //     }
-    // }
-    // if (aliensRemoved.length === alienInvaders.length) {
-    //     // resultsDisplay.innerHTML = 'YOU WIN'
-    //     clearInterval(invadersId)
-    // }
+   // ends the game if the invaders make it to the bottom of the grid
+    for (let i = 0; i < alienInvaders.length; i++) {
+        if (alienInvaders[i] > squares.length ) {
+            // resultsDisplay.innerHTML = 'GAME OVER'
+            clearInterval(invadersId)
+        }
+    }
+    if (aliensRemoved.length === alienInvaders.length) {
+        // resultsDisplay.innerHTML = 'YOU WIN'
+        clearInterval(invadersId)
+    }
 }
 
 // invaders move every 100ms
@@ -184,7 +198,9 @@ const shoot = (e) => {
     //         laserId = setInterval(setLaser, 100)
     // }
 }
-
+useEffect(() => {
+    window.addEventListener('keydown', shoot)
+})
 // document.addEventListener('keydown', shoot)
 
 // useEffect(() => {
@@ -192,7 +208,38 @@ const shoot = (e) => {
 //     clearInterval(laserId)
 //      });
 
+    // keeps track of key presses for moving shooter
+    const arrowLeft = useKeyPress('leftArrow')
+    const arrowRight = useKeyPress('rightArrow')
 
+    // Hook
+function useKeyPress(targetKey) {
+    // State for keeping track of whether key is pressed
+    // const [keyPressed, setKeyPressed] = useState<boolean>(false);
+    // If pressed key is our target key then set to true
+    function downHandler({ key }) {
+      if (key === targetKey) {
+        // setKeyPressed(true);
+      }
+    }
+    // If released key is our target key then set to false
+    // const upHandler = ({ key }) => {
+    //   if (key === targetKey) {
+    //     setKeyPressed(false);
+    //   }
+    // };
+    // Add event listeners
+    useEffect(() => {
+      window.addEventListener("keydown", downHandler);
+    //   window.addEventListener("keyup", upHandler);
+      // Remove event listeners on cleanup
+      return () => {
+        window.removeEventListener("keydown", downHandler);
+        // window.removeEventListener("keyup", upHandler);
+      };
+    }, []); // Empty array ensures that effect is only run on mount and unmount
+    // return keyPressed;
+  }
 
     return (
         <Container>
@@ -252,11 +299,15 @@ const Square = styled.div`
         background-color: green;
     }
 
-    & .laser {
+    &.default {
+        background-color: pink;
+    }
+
+    &.laser {
         background-color: orange;
     }
 
-    & .boom {
+    &.boom {
         background-color: red;
     }
 
