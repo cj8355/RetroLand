@@ -22,8 +22,10 @@ const Home = () => {
 const Container = styled.div`
 background-image: url(${background});
 background-repeat: no-repeat;
-background-size: 70% 70%;
+background-size: 90% 90%;
 margin: 0;
+outline: none;
+border: none;
 
 `
 

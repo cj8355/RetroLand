@@ -2,6 +2,7 @@ import styled from "styled-components";
 import {ThemeProvider} from "styled-components";
 import { main, invader } from '../themes';
 import { useState, useEffect } from "react";
+import { useReducer } from "react";
 
 
 const SpaceInvaders = () => {
@@ -9,7 +10,14 @@ const SpaceInvaders = () => {
     const [currentLaserIndex, setCurrentLaserIndex] = useState();
     const [currentShooterIndex, setCurrentShooterIndex] = useState(202);
     const [laserId, setLaserId] = useState();
-    const [color, setColor] = useState('white')
+    const [color, setColor] = useState('white');
+    const [move, setMove] = useState(0);
+    const [ignored, forceUpdate] = useReducer(x => x + 1, 0)
+    const [alienInvaders, setAlienInvaders] = useState([
+        0,1,2,3,4,5,6,7,8,9,
+    15,16,17,18,19,20,21,22,23,24,
+    30,31,32,33,34,35,36,37,38,39
+    ])
     
 
     const colors = ['white', 'yellow', 'red', 'blue', 'green']
@@ -45,17 +53,19 @@ const squares = grid
 // }
 
 // positioning of the alien invaders based off of the grid index
-const alienInvaders = [
-    0,1,2,3,4,5,6,7,8,9,
-    15,16,17,18,19,20,21,22,23,24,
-    30,31,32,33,34,35,36,37,38,39
-]
+// const alienInvaders = [
+//     0,1,2,3,4,5,6,7,8,9,
+//     15,16,17,18,19,20,21,22,23,24,
+//     30,31,32,33,34,35,36,37,38,39
+// ]
     
 // adding the invader class to the squares in the grid which will have an invader in them
 const draw = () => {
     for (let i = 0; i < alienInvaders.length; i++) {
         if (!aliensRemoved.includes(i)) {
-            squares[alienInvaders[i]].className = ('invader')
+            squares[alienInvaders[i]].classList.add('invader')
+            
+            
             // squares[alienInvaders[i]].style = {backgroundColor: 'purple'}
             // console.log(alienInvaders[i])
             // console.log(squares[alienInvaders[i]].style.backgroundColor)
@@ -91,23 +101,25 @@ const remove = () => {
 
 // controls the left and right movement of the shooter, moves the shooter class from one square in the grid to another
 const moveShooter = (e)  => {
-    console.log(squares)
+    // console.log(squares)
     // squares[currentShooterIndex].className = ('default')
     squares[currentShooterIndex].classList.remove('shooter')
     switch(e.key) {
         case 'ArrowLeft':
             if (currentShooterIndex % width !== 0) setCurrentShooterIndex(prevState => prevState - 1)
             // currentShooterIndex -= 1
+            // console.log(currentShooterIndex.offsetLeft())
             break
         case 'ArrowRight':
             if (currentShooterIndex % width < width -1) setCurrentShooterIndex(prevState => prevState + 1)
             // currentShooterIndex += 1
+             console.log(currentShooterIndex)
             break      
     }
     // adding the shooter class to make it appear as if the shooter is moving
     // squares[currentShooterIndex].classList.add('shooter')
     // console.log(squares[currentShooterIndex])
-    console.log(currentShooterIndex)
+    // console.log(currentShooterIndex)
 }
 
 // event listener to listen if the user moves the shooter
@@ -121,14 +133,18 @@ useEffect(() => {
 const moveInvaders = () => {
     const leftEdge = alienInvaders[0] % width === 0
     const rightEdge = alienInvaders[alienInvaders.length - 1] % width === width - 1
+    // setMove(move + 1)
+    forceUpdate()
     remove()
 
     //reverse the direction of the invaders once they get to the right edge of the grid div
     if (rightEdge && goingRight) {
         for (let i = 0; i < alienInvaders.length; i++) {
-            alienInvaders[i] += width +1
+            alienInvaders[i] += width + 1
+            // setAlienInvaders(([...prevState]) => prevState[i] + width + 1)
             direction = -1
             goingRight = false
+            console.log('going lef')
         }
     }
 
@@ -136,15 +152,23 @@ const moveInvaders = () => {
     if (leftEdge && !goingRight) {
         for (let i = 0; i < alienInvaders.length; i++) {
             alienInvaders[i] += width -1
-            direction = 1
+            // setAlienInvaders((prevState) => prevState[i] + width - 1)
+            direction =  1
             goingRight = true
+            console.log('going rig')
         }
     }
 
     for (let i = 0; i < alienInvaders.length; i++) {
+        
+        // setAlienInvaders(prev => prev + direction )
+        
         alienInvaders[i] += direction
+        // console.log(alienInvaders[i])
+        // console.log('ran')
     }
     draw()
+    
 
     //shooter loses if the invaders make it down to the shooters row and an invader occupies the same square as the shooter
     if (squares[currentShooterIndex].classList.contains('invader', 'shooter')) {
@@ -169,38 +193,58 @@ const moveInvaders = () => {
 // invaders move every 100ms
 // invadersId = setInterval(moveInvaders, 500)
 
+useEffect(() => {
+     invadersId = setInterval(() => {
+        moveInvaders()
+        
+        // setAlienInvaders(prevState => prevState)
+      console.log(move);
+    }, 500);
+    return () => clearInterval(invadersId);
+  }, [move]);
+
 
 
 const shoot = (e) => {
     let laserId
     let currentLaserIndex = currentShooterIndex
-     setLaser((laser) => {
-        // squares[currentLaserIndex].classList.remove('laser')
-        // currentLaserIndex -= width
-        // squares[currentLaserIndex].classList.add('laser')
+     function moveLaser() {
+        squares[currentLaserIndex].classList.remove('laser')
+        currentLaserIndex -= width
+        squares[currentLaserIndex].classList.add('laser')
 
-        // if (squares[currentLaserIndex].classList.contains('invader')) {
-        //     squares[currentLaserIndex].classList.remove('laser')
-        //     squares[currentLaserIndex].classList.remove('invader')
-        //     squares[currentLaserIndex].classList.add('boom')
+        if (squares[currentLaserIndex].classList.contains('invader')) {
+            squares[currentLaserIndex].classList.remove('laser')
+            squares[currentLaserIndex].classList.remove('invader')
+            squares[currentLaserIndex].classList.add('boom')
 
             
+            console.log('shoot')
+            const alienRemoved = alienInvaders.indexOf(currentLaserIndex)
+            aliensRemoved.push(alienRemoved)
+            results++
+            // resultsDisplay.innerHTML = results
+        }
+    }
 
-        //     const alienRemoved = alienInvaders.indexOf(currentLaserIndex)
-        //     aliensRemoved.push(alienRemoved)
-        //     results++
-        //     // resultsDisplay.innerHTML = results
-        // }
-    })
+    if(e.key == '32'){
+        console.log('shoot');
+        laserId = setInterval(moveLaser, 100)
+}
 
     // switch(e.key) {
-    //     case 'ArrowUp':
-    //         laserId = setInterval(setLaser, 100)
+    //     case '32':
+    //         laserId = setInterval(moveLaser, 100)
+            
     // }
 }
+
+
+
+
 useEffect(() => {
     window.addEventListener('keydown', shoot)
-})
+}, [])
 // document.addEventListener('keydown', shoot)
 
 // useEffect(() => {
@@ -243,7 +287,7 @@ function useKeyPress(targetKey) {
 
     return (
         <Container>
-            <h1>Space Inv</h1>
+            <Title>Space Inv</Title>
             <Grid >
                 
             
@@ -251,7 +295,7 @@ function useKeyPress(targetKey) {
                 const {id, className, position} = block
                 // console.log(block)
                 return (
-                    <Square key={id} className={className} position={position} />
+                    <Square key={squares[block]} className={className} position={position} />
                     
                 ) 
             })} 
@@ -274,13 +318,18 @@ function useKeyPress(targetKey) {
 const Container = styled.div`
     width: 400px;
     height: 400px;
+    margin-left: 15px;
     
+`
+
+const Title = styled.h1`
+    color: white;
+    font-size: 35px;
 `
 
 const Grid = styled.div`
     width: 300px;
     height: 300px;
-    border: 1px solid black;
     display: flex;
     flex-wrap: wrap;
     background-color: white;
