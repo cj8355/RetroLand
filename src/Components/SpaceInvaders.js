@@ -3,6 +3,9 @@ import {ThemeProvider} from "styled-components";
 import { main, invader } from '../themes';
 import { useState, useEffect } from "react";
 import { useReducer } from "react";
+import pause from "../pause.svg";
+import PauseCircleIcon from '@mui/icons-material/PauseCircle';
+import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 
 
 const SpaceInvaders = () => {
@@ -12,6 +15,7 @@ const SpaceInvaders = () => {
     const [laserId, setLaserId] = useState();
     const [color, setColor] = useState('white');
     const [move, setMove] = useState(0);
+    
     const [ignored, forceUpdate] = useReducer(x => x + 1, 0)
     const [alienInvaders, setAlienInvaders] = useState([
         0,1,2,3,4,5,6,7,8,9,
@@ -104,16 +108,21 @@ const moveShooter = (e)  => {
     // console.log(squares)
     // squares[currentShooterIndex].className = ('default')
     squares[currentShooterIndex].classList.remove('shooter')
+    
     switch(e.key) {
         case 'ArrowLeft':
-            if (currentShooterIndex % width !== 0) setCurrentShooterIndex(prevState => prevState - 1)
+            if (currentShooterIndex % width !== 0) {
+            setCurrentShooterIndex(prevState => prevState - 1)
             // currentShooterIndex -= 1
-            // console.log(currentShooterIndex.offsetLeft())
+            console.log(currentShooterIndex)
+            }
             break
         case 'ArrowRight':
-            if (currentShooterIndex % width < width -1) setCurrentShooterIndex(prevState => prevState + 1)
+            if (currentShooterIndex % width < width -1) {
+             setCurrentShooterIndex(prevState => prevState + 1)
             // currentShooterIndex += 1
              console.log(currentShooterIndex)
+            }
             break      
     }
     // adding the shooter class to make it appear as if the shooter is moving
@@ -193,15 +202,34 @@ const moveInvaders = () => {
 // invaders move every 100ms
 // invadersId = setInterval(moveInvaders, 500)
 
-useEffect(() => {
-     invadersId = setInterval(() => {
-        moveInvaders()
+
+    // useEffect((startGame) => {
+    //     invadersId = setInterval(() => {
+    //        moveInvaders()
+           
+    //        // setAlienInvaders(prevState => prevState)
+    //      console.log(move);
+    //    }, 500);
+    //    return () => clearInterval(invadersId);
+    //  }, [move]);
+
+
+     const startGame = (e) => {
+        console.log('clicked')
+        invadersId = setInterval(() => {
+            moveInvaders()
+            
+            // setAlienInvaders(prevState => prevState)
+          console.log(move);
+        }, 500);
+        return () => clearInterval(invadersId);
+     }
+
+     
+     const pauseGame = (e) => {
+        console.log('clicked22')
         
-        // setAlienInvaders(prevState => prevState)
-      console.log(move);
-    }, 500);
-    return () => clearInterval(invadersId);
-  }, [move]);
+     }
 
 
 
@@ -288,6 +316,7 @@ function useKeyPress(targetKey) {
     return (
         <Container>
             <Title>Space Inv</Title>
+            
             <Grid >
                 
             
@@ -301,14 +330,31 @@ function useKeyPress(targetKey) {
             })} 
                 
             </Grid>
+            <BtnContainer>
+
             
-            
+            {/* <PauseCircleIcon onClick={pauseGame} style={{color: 'white', width: '45px', height: '45px', cursor: 'pointer'}} />
+            < PlayCircleIcon onClick={startGame} style={{color: 'white', width: '45px', height: '45px', cursor: 'pointer'}}/> */}
+            <PlayBtn onClick={startGame}>
+                <PlayText>
+                    Play
+                </PlayText>
+            </PlayBtn>
+            <PauseBtn>
+                <PauseText onClick={pauseGame}>
+                    Pause
+                </PauseText>
+            </PauseBtn>
+            <LeaderboardBtn>
+                <LeaderboardText>
+                    Leaderboard
+                </LeaderboardText>
+            </LeaderboardBtn>
+            </BtnContainer>
         </Container>
+        
     )
 }
-
-
-
 
 
 
@@ -367,16 +413,329 @@ const Square = styled.div`
     .invader  {
         background-color: purple;
         border: 1px solid black;
+        
     }
 
 `
-
-
 
 const Shooter = styled.div`
     width: 20px;
     height: 20px;
     background-color: green;
+`
+const BtnContainer = styled.div`
+    width: 200px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+`
+
+const PlayBtn = styled.div`
+    position: relative;
+    width: 155px;
+    height: 50px;
+    margin: 20px;
+
+    &:before {
+        content: '';
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: -25px;
+        width: 30px;
+        height: 10px;
+        background: red;
+        border-radius: 10px;
+        transition: 0.5s;
+        transition-delay: 0.5s;
+    }
+
+    &:after {
+        content: '';
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        top: 10px;
+        width: 30px;
+        height: 10px;
+        background: red;
+        border-radius: 10px;
+        transition: 0.5s;
+        transition-delay: 0.5s;
+    }
+
+    &:hover {
+        &:before {
+            
+            bottom: -15px;
+            height: 50%;
+            width: 80%;
+            border-radius: 30px;
+            transition-delay: 0.5s;
+        }
+    }
+
+    &:hover {
+        &:after {
+            
+            top: 20px;
+            height: 50%;
+            width: 80%;
+            border-radius: 30px;
+            transition-delay: 0.5s;
+        }
+    }
+
+    
+`
+
+const PlayText = styled.p`
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(255,255,255,0.05);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    border-top: 1px solid rgba(255,255,255,0.1);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    border-radius: 30px;
+    color: white;
+    z-index: 1;
+    font-weight: 400;
+    letter-spacing: 1px;
+    overflow: hidden;
+    transition: 0.5s;
+    backdrop-filter: blur(15px);
+
+    &:hover {
+        letter-spacing: 3px;
+
+        &:before {
+            transform: skewX(45deg) translateX(200%);
+        }
+    }
+
+    &:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 50%;
+        height: 100%;
+        background: linear-gradient(to left, rgba(255,255,255,0.15), transparent);
+        transform: skewX(45deg) translateX(0);
+        transition: 0.5s;
+    }
+
+`
+
+const PauseBtn = styled.div`
+    position: relative;
+    width: 155px;
+    height: 50px;
+    margin: 20px;
+
+    &:before {
+        content: '';
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: -25px;
+        width: 30px;
+        height: 10px;
+        background: red;
+        border-radius: 10px;
+        transition: 0.5s;
+        transition-delay: 0.5s;
+    }
+
+    &:after {
+        content: '';
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        top: 10px;
+        width: 30px;
+        height: 10px;
+        background: red;
+        border-radius: 10px;
+        transition: 0.5s;
+        transition-delay: 0.5s;
+    }
+
+    &:hover {
+        &:before {
+            
+            bottom: -15px;
+            height: 50%;
+            width: 80%;
+            border-radius: 30px;
+            transition-delay: 0.5s;
+        }
+    }
+
+    &:hover {
+        &:after {
+            
+            top: 20px;
+            height: 50%;
+            width: 80%;
+            border-radius: 30px;
+            transition-delay: 0.5s;
+        }
+    }
+
+`
+
+const PauseText = styled.p`
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(255,255,255,0.05);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    border-top: 1px solid rgba(255,255,255,0.1);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    border-radius: 30px;
+    color: white;
+    z-index: 1;
+    font-weight: 400;
+    letter-spacing: 1px;
+    overflow: hidden;
+    transition: 0.5s;
+    backdrop-filter: blur(15px);
+
+    &:hover {
+        letter-spacing: 3px;
+
+        &:before {
+            transform: skewX(45deg) translateX(200%);
+        }
+    }
+
+    &:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 50%;
+        height: 100%;
+        background: linear-gradient(to left, rgba(255,255,255,0.15), transparent);
+        transform: skewX(45deg) translateX(0);
+        transition: 0.5s;
+    }
+
+`
+
+const LeaderboardBtn = styled.div`
+    position: relative;
+    width: 155px;
+    height: 50px;
+    margin: 20px;
+
+    &:before {
+        content: '';
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: -25px;
+        width: 30px;
+        height: 10px;
+        background: red;
+        border-radius: 10px;
+        transition: 0.5s;
+        transition-delay: 0.5s;
+    }
+
+    &:after {
+        content: '';
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        top: 10px;
+        width: 30px;
+        height: 10px;
+        background: red;
+        border-radius: 10px;
+        transition: 0.5s;
+        transition-delay: 0.5s;
+    }
+
+    &:hover {
+        &:before {
+            
+            bottom: -15px;
+            height: 50%;
+            width: 80%;
+            border-radius: 30px;
+            transition-delay: 0.5s;
+        }
+    }
+
+    &:hover {
+        &:after {
+            
+            top: 20px;
+            height: 50%;
+            width: 80%;
+            border-radius: 30px;
+            transition-delay: 0.5s;
+        }
+    }
+
+
+`
+
+const LeaderboardText = styled.p`
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(255,255,255,0.05);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    border-top: 1px solid rgba(255,255,255,0.1);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    border-radius: 30px;
+    color: white;
+    z-index: 1;
+    font-weight: 400;
+    letter-spacing: 1px;
+    overflow: hidden;
+    transition: 0.5s;
+    backdrop-filter: blur(15px);
+
+    &:hover {
+        letter-spacing: 3px;
+
+        &:before {
+            transform: skewX(45deg) translateX(200%);
+        }
+    }
+
+    &:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 50%;
+        height: 100%;
+        background: linear-gradient(to left, rgba(255,255,255,0.15), transparent);
+        transform: skewX(45deg) translateX(0);
+        transition: 0.5s;
+    }
+
 `
 
 
