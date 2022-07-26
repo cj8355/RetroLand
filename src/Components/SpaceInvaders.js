@@ -6,6 +6,7 @@ import { useReducer } from "react";
 import pause from "../pause.svg";
 import PauseCircleIcon from '@mui/icons-material/PauseCircle';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
+import arcade from "../arcadeMachine.svg"
 
 
 const SpaceInvaders = () => {
@@ -37,6 +38,7 @@ let invadersId
 let goingRight = true
 let aliensRemoved = []
 let results = 0
+let numMoves = 0
 
 
 // dynamically creating the divs contained in the grid layout
@@ -107,21 +109,27 @@ const remove = () => {
 const moveShooter = (e)  => {
     // console.log(squares)
     // squares[currentShooterIndex].className = ('default')
+    
     squares[currentShooterIndex].classList.remove('shooter')
     
+    console.log(squares[currentShooterIndex])
     switch(e.key) {
         case 'ArrowLeft':
-            if (currentShooterIndex % width !== 0) {
+            if (numMoves < 7) {
             setCurrentShooterIndex(prevState => prevState - 1)
             // currentShooterIndex -= 1
-            console.log(currentShooterIndex)
+            
+            numMoves = numMoves + 1
+            console.log("this" + numMoves)
             }
             break
         case 'ArrowRight':
-            if (currentShooterIndex % width < width -1) {
+            if (numMoves > -7) {
              setCurrentShooterIndex(prevState => prevState + 1)
             // currentShooterIndex += 1
-             console.log(currentShooterIndex)
+             
+             numMoves = numMoves - 1
+             console.log(numMoves)
             }
             break      
     }
@@ -230,6 +238,8 @@ const moveInvaders = () => {
         console.log('clicked22')
         
      }
+
+     
 
 
 
@@ -362,9 +372,12 @@ function useKeyPress(targetKey) {
 
 
 const Container = styled.div`
-    width: 400px;
-    height: 400px;
+    width: 800px;
+    height: 800px;
     margin-left: 15px;
+    background-image: url(${arcade});
+    background-repeat: no-repeat;
+    background-size: 700px 700px;
     
 `
 
