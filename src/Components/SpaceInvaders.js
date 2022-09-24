@@ -11,7 +11,6 @@ import arcade from "../arcadeMachine.svg"
 
 const SpaceInvaders = () => {
     const [laser, setLaser] = useState();
-    const [currentLaserIndex, setCurrentLaserIndex] = useState();
     const [currentShooterIndex, setCurrentShooterIndex] = useState(202);
     const [laserId, setLaserId] = useState();
     const [color, setColor] = useState('white');
@@ -245,8 +244,9 @@ const moveInvaders = () => {
 
 const shoot = (e) => {
     let laserId
-    let currentLaserIndex = currentShooterIndex
+    let currentLaserIndex = currentShooterIndex + numMoves
      function moveLaser() {
+        console.log("app" + squares[currentLaserIndex].classList)
         squares[currentLaserIndex].classList.remove('laser')
         currentLaserIndex -= width
         squares[currentLaserIndex].classList.add('laser')
@@ -265,10 +265,18 @@ const shoot = (e) => {
         }
     }
 
-    if(e.key == '32'){
+    if(e.keyCode == 32){
         console.log('shoot');
-        laserId = setInterval(moveLaser, 100)
-}
+        // laserId = setInterval(moveLaser, 100)
+        laserId = setInterval(() => {
+            moveLaser()
+            
+            // setAlienInvaders(prevState => prevState)
+          console.log("shooters");
+        }, 100);
+        return () => clearInterval(laserId);
+     }
+
 
     // switch(e.key) {
     //     case '32':
@@ -372,13 +380,18 @@ function useKeyPress(targetKey) {
 
 
 const Container = styled.div`
-    width: 800px;
-    height: 800px;
+    width: 50%;
+    height: 70%;
     margin-left: 15px;
     background-image: url(${arcade});
     background-repeat: no-repeat;
-    background-size: 700px 700px;
+    background-size: 90% 90%;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    flex-direction: column;
     
+    flex-wrap: wrap;
 `
 
 const Title = styled.h1`
@@ -448,6 +461,7 @@ const PlayBtn = styled.div`
     width: 155px;
     height: 50px;
     margin: 20px;
+    cursor: pointer;
 
     &:before {
         content: '';
@@ -551,6 +565,7 @@ const PauseBtn = styled.div`
     width: 155px;
     height: 50px;
     margin: 20px;
+    cursor: pointer;
 
     &:before {
         content: '';
@@ -653,6 +668,7 @@ const LeaderboardBtn = styled.div`
     width: 155px;
     height: 50px;
     margin: 20px;
+    cursor: pointer;
 
     &:before {
         content: '';

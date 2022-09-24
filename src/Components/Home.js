@@ -3,7 +3,7 @@ import Breakout from "./Breakout";
 import Frogger from "./Frogger";
 import SpaceInvaders from "./SpaceInvaders";
 import WhacAMole from "./Whac-A-Mole";
-import background from "../arcade.jfif"
+import background from "../breakout-2.svg"
 
 const Home = () => {
 
@@ -11,10 +11,12 @@ const Home = () => {
         <Container>
             <Title>Retroland</Title>
 
+            <Games>
             <SpaceInvaders />
             <Frogger />
             <Breakout />
             <WhacAMole />
+            </Games>
         </Container>
     )
 }
@@ -22,11 +24,23 @@ const Home = () => {
 const Container = styled.div`
 background-image: url(${background});
 background-repeat: no-repeat;
-background-size: 90% 90%;
+background-size: 100vw 100vh;
 margin: 0;
 outline: none;
 border: none;
+width: 100vw;
+height: 100vh;
+background-color: black;
+background-position: 50% 50%;
+overflow: hidden;
+`
 
+const Games = styled.div`
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 `
 
 const Title = styled.h1`
