@@ -6,7 +6,9 @@ import { useReducer } from "react";
 import pause from "../pause.svg";
 import PauseCircleIcon from '@mui/icons-material/PauseCircle';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
-import arcade from "../arcadeMachine.svg"
+import arcade from "../arcadeMachine.svg";
+import invaderImg from "../invader.svg";
+import rocket from "../rocket.svg";
 
 
 const SpaceInvaders = () => {
@@ -235,7 +237,7 @@ const moveInvaders = () => {
      
      const pauseGame = (e) => {
         console.log('clicked22')
-        
+        startGame(clearInterval(invadersId))
      }
 
      
@@ -404,20 +406,25 @@ const Grid = styled.div`
     height: 300px;
     display: flex;
     flex-wrap: wrap;
-    background-color: white;
+    position: relative;
+    z-index: 100;
 `
 
 const Square = styled.div`
 
     &.invader {
-        background-color: purple;
-        border-radius: 50%;
-
+        background-color: rgb(44,43,42);
+        
+        background-image: url(${invaderImg});
+        background-size: 100%;
         
     }
 
     &.shooter {
-        background-color: green;
+        background-color: rgb(44,43,42);
+        background-image: url(${rocket});
+        background-size: 100%;
+        
     }
 
     &.default {
@@ -434,7 +441,8 @@ const Square = styled.div`
 
     width: 20px;
     height: 20px;
-    background-color: white;
+    background-color: rgb(44,43,42);
+    
 
     .invader  {
         background-color: purple;
@@ -448,6 +456,7 @@ const Shooter = styled.div`
     width: 20px;
     height: 20px;
     background-color: green;
+
 `
 const BtnContainer = styled.div`
     width: 200px;
