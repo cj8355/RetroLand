@@ -13,9 +13,9 @@ const Home = () => {
 
             <Games>
             <SpaceInvaders />
-            <Frogger />
+            {/* <Frogger />
             <Breakout />
-            <WhacAMole />
+            <WhacAMole /> */}
             </Games>
         </Container>
     )

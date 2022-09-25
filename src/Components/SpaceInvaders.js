@@ -336,7 +336,7 @@ function useKeyPress(targetKey) {
     return (
         <Container>
             <Title>Space Inv</Title>
-            
+            <Score>Score: </Score>
             <Grid >
                 
             
@@ -774,6 +774,11 @@ const LeaderboardText = styled.p`
         transition: 0.5s;
     }
 
+`
+
+const Score = styled.div`
+    color: white;
+    font-size: 28px;
 `
 
 
