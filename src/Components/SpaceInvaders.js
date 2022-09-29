@@ -17,6 +17,7 @@ const SpaceInvaders = () => {
     const [laserId, setLaserId] = useState();
     const [color, setColor] = useState('white');
     const [move, setMove] = useState(0);
+    const [showButtons, setShowButtons] = useState(false);
     
     const [ignored, forceUpdate] = useReducer(x => x + 1, 0)
     const [alienInvaders, setAlienInvaders] = useState([
@@ -240,18 +241,43 @@ const moveInvaders = () => {
         startGame(clearInterval(invadersId))
      }
 
-     
+     const showBtns = (e) => {
+        setShowButtons(current => !current);
+     }
 
+
+     
+const restartGame = (e) => {
+    
+
+
+    
+   
+    for (let i = 0; i < alienInvaders.length; i++) {
+        clearInterval(invadersId)
+        squares[alienInvaders[i]].classList.remove("invader")
+        console.log(squares[alienInvaders[i]].classList)
+        console.log("remove")
+
+    }
+    
+    
+    console.log("restart")
+    
+}
 
 
 const shoot = (e) => {
+    results++
     let laserId
-    let currentLaserIndex = currentShooterIndex + numMoves
+    // let currentLaserIndex = currentShooterIndex + numMoves
+    let currentLaserIndex = currentShooterIndex
      function moveLaser() {
-        console.log("app" + squares[currentLaserIndex].classList)
+        // console.log("app" + squares[currentLaserIndex].classList)
         squares[currentLaserIndex].classList.remove('laser')
         currentLaserIndex -= width
         squares[currentLaserIndex].classList.add('laser')
+        
 
         if (squares[currentLaserIndex].classList.contains('invader')) {
             squares[currentLaserIndex].classList.remove('laser')
@@ -336,7 +362,7 @@ function useKeyPress(targetKey) {
     return (
         <Container>
             <Title>Space Inv</Title>
-            <Score>Score: </Score>
+            <Score>Score: {results}</Score>
             <Grid >
                 
             
@@ -350,27 +376,36 @@ function useKeyPress(targetKey) {
             })} 
                 
             </Grid>
-            <BtnContainer>
+            {
+            setShowButtons &&
+                <BtnContainer>
 
+                            
+                {/* <PauseCircleIcon onClick={pauseGame} style={{color: 'white', width: '45px', height: '45px', cursor: 'pointer'}} />
+                < PlayCircleIcon onClick={startGame} style={{color: 'white', width: '45px', height: '45px', cursor: 'pointer'}}/> */}
+                <PlayBtn onClick={startGame}>
+                    <PlayText>
+                        Play
+                    </PlayText>
+                </PlayBtn>
+                <PauseBtn>
+                    <PauseText onClick={pauseGame}>
+                        Pause
+                    </PauseText>
+                </PauseBtn>
+                <LeaderboardBtn>
+                    <LeaderboardText>
+                        Leaderboard
+                    </LeaderboardText>
+                </LeaderboardBtn>
+                <RestartBtn>
+                    <RestartText onClick={restartGame}>
+                        Restart
+                    </RestartText>
+                </RestartBtn>
+                </BtnContainer>
+            }
             
-            {/* <PauseCircleIcon onClick={pauseGame} style={{color: 'white', width: '45px', height: '45px', cursor: 'pointer'}} />
-            < PlayCircleIcon onClick={startGame} style={{color: 'white', width: '45px', height: '45px', cursor: 'pointer'}}/> */}
-            <PlayBtn onClick={startGame}>
-                <PlayText>
-                    Play
-                </PlayText>
-            </PlayBtn>
-            <PauseBtn>
-                <PauseText onClick={pauseGame}>
-                    Pause
-                </PauseText>
-            </PauseBtn>
-            <LeaderboardBtn>
-                <LeaderboardText>
-                    Leaderboard
-                </LeaderboardText>
-            </LeaderboardBtn>
-            </BtnContainer>
         </Container>
         
     )
@@ -387,7 +422,7 @@ const Container = styled.div`
     margin-left: 15px;
     background-image: url(${arcade});
     background-repeat: no-repeat;
-    background-size: 90% 90%;
+    background-size: 99% 99%;
     display: flex;
     align-items: center;
     justify-content: start;
@@ -733,6 +768,110 @@ const LeaderboardBtn = styled.div`
 `
 
 const LeaderboardText = styled.p`
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(255,255,255,0.05);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    border-top: 1px solid rgba(255,255,255,0.1);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    border-radius: 30px;
+    color: white;
+    z-index: 1;
+    font-weight: 400;
+    letter-spacing: 1px;
+    overflow: hidden;
+    transition: 0.5s;
+    backdrop-filter: blur(15px);
+
+    &:hover {
+        letter-spacing: 3px;
+
+        &:before {
+            transform: skewX(45deg) translateX(200%);
+        }
+    }
+
+    &:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 50%;
+        height: 100%;
+        background: linear-gradient(to left, rgba(255,255,255,0.15), transparent);
+        transform: skewX(45deg) translateX(0);
+        transition: 0.5s;
+    }
+
+`
+
+const RestartBtn = styled.div`
+    position: relative;
+    width: 155px;
+    height: 50px;
+    margin: 20px;
+    cursor: pointer;
+
+    &:before {
+        content: '';
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: -25px;
+        width: 30px;
+        height: 10px;
+        background: red;
+        border-radius: 10px;
+        transition: 0.5s;
+        transition-delay: 0.5s;
+    }
+
+    &:after {
+        content: '';
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        top: 10px;
+        width: 30px;
+        height: 10px;
+        background: red;
+        border-radius: 10px;
+        transition: 0.5s;
+        transition-delay: 0.5s;
+    }
+
+    &:hover {
+        &:before {
+            
+            bottom: -15px;
+            height: 50%;
+            width: 80%;
+            border-radius: 30px;
+            transition-delay: 0.5s;
+        }
+    }
+
+    &:hover {
+        &:after {
+            
+            top: 20px;
+            height: 50%;
+            width: 80%;
+            border-radius: 30px;
+            transition-delay: 0.5s;
+        }
+    }
+
+
+`
+
+const RestartText = styled.p`
     position: absolute;
     top: 0;
     left: 0;
