@@ -9,6 +9,7 @@ import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import arcade from "../arcadeMachine.svg";
 import invaderImg from "../invader.svg";
 import rocket from "../rocket.svg";
+import VideogameAssetIcon from '@mui/icons-material/VideogameAsset';
 
 
 const SpaceInvaders = () => {
@@ -243,6 +244,7 @@ const moveInvaders = () => {
 
      const showBtns = (e) => {
         setShowButtons(current => !current);
+        console.log("hide")
      }
 
 
@@ -376,8 +378,11 @@ function useKeyPress(targetKey) {
             })} 
                 
             </Grid>
+
+            <VideogameAssetIcon onClick={showBtns}/>
             {
-            setShowButtons &&
+            showButtons &&
+            (
                 <BtnContainer>
 
                             
@@ -404,6 +409,7 @@ function useKeyPress(targetKey) {
                     </RestartText>
                 </RestartBtn>
                 </BtnContainer>
+            )
             }
             
         </Container>
