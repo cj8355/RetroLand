@@ -10,12 +10,14 @@ import arcade from "../arcadeMachine.svg";
 import invaderImg from "../invader.svg";
 import rocket from "../rocket.svg";
 import VideogameAssetIcon from '@mui/icons-material/VideogameAsset';
+import { height } from "@mui/system";
 
 
 const SpaceInvaders = () => {
-    const [laser, setLaser] = useState();
+    
     const [currentShooterIndex, setCurrentShooterIndex] = useState(202);
-    const [laserId, setLaserId] = useState();
+    // const [laser, setLaser] = useState();
+    // const [laserId, setLaserId] = useState();
     const [color, setColor] = useState('white');
     const [move, setMove] = useState(0);
     const [showButtons, setShowButtons] = useState(false);
@@ -115,7 +117,7 @@ const moveShooter = (e)  => {
     
     squares[currentShooterIndex].classList.remove('shooter')
     
-    console.log(squares[currentShooterIndex])
+    console.log(squares)
     switch(e.key) {
         case 'ArrowLeft':
             if (numMoves < 7) {
@@ -271,12 +273,16 @@ const restartGame = (e) => {
 
 const shoot = (e) => {
     results++
-    let laserId
+    
     // let currentLaserIndex = currentShooterIndex + numMoves
-    let currentLaserIndex = currentShooterIndex
+     let currentLaserIndex = (currentShooterIndex - numMoves)
      function moveLaser() {
-        // console.log("app" + squares[currentLaserIndex].classList)
+        // squares[currentLaserIndex].classList.add('laser')
+        console.log(squares[currentLaserIndex].classList)
+        console.log(currentLaserIndex)
+        // console.log(squares)
         squares[currentLaserIndex].classList.remove('laser')
+        // setLaser(prevState => prevState - width)
         currentLaserIndex -= width
         squares[currentLaserIndex].classList.add('laser')
         
@@ -286,8 +292,9 @@ const shoot = (e) => {
             squares[currentLaserIndex].classList.remove('invader')
             squares[currentLaserIndex].classList.add('boom')
 
+            setTimeout(() => squares[currentLaserIndex].classList.remove('boom'), 300)
             
-            console.log('shoot')
+            // console.log('shoot22')
             const alienRemoved = alienInvaders.indexOf(currentLaserIndex)
             aliensRemoved.push(alienRemoved)
             results++
@@ -296,13 +303,13 @@ const shoot = (e) => {
     }
 
     if(e.keyCode == 32){
-        console.log('shoot');
+        // console.log('shoot');
         // laserId = setInterval(moveLaser, 100)
-        laserId = setInterval(() => {
+        let laserId = setInterval(() => {
             moveLaser()
             
             // setAlienInvaders(prevState => prevState)
-          console.log("shooters");
+        //   console.log("shooters");
         }, 100);
         return () => clearInterval(laserId);
      }
@@ -379,7 +386,7 @@ function useKeyPress(targetKey) {
                 
             </Grid>
 
-            <VideogameAssetIcon onClick={showBtns}/>
+            <VideogameAssetIcon onClick={showBtns} style={{"height" : "6%", "width" : "8%", "color": "gold", "cursor": "pointer"}}/>
             {
             showButtons &&
             (
@@ -468,37 +475,35 @@ const Square = styled.div`
         
     }
 
-    &.default {
-        background-color: pink;
-    }
+    /* &.default {
+        background-color: rgb(0,0,42);
+    } */
 
-    &.laser {
-        background-color: orange;
-    }
+    
 
     &.boom {
         background-color: red;
+        background-size: 100%;
     }
+
+    &.laser {
+        background-color: rgb(217, 34, 2);
+        background-size: 100%;
+        
+    }
+
 
     width: 20px;
     height: 20px;
     background-color: rgb(44,43,42);
+
+    
     
 
-    .invader  {
-        background-color: purple;
-        border: 1px solid black;
-        
-    }
+  
 
 `
 
-const Shooter = styled.div`
-    width: 20px;
-    height: 20px;
-    background-color: green;
-
-`
 const BtnContainer = styled.div`
     width: 200px;
     display: flex;
