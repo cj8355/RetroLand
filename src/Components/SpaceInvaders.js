@@ -17,7 +17,7 @@ const SpaceInvaders = () => {
     
     const [currentShooterIndex, setCurrentShooterIndex] = useState(202);
     // const [laser, setLaser] = useState();
-    // const [laserId, setLaserId] = useState();
+    // const [currentLaserIndex, setCurrentLaserIndex] = useState(currentShooterIndex);
     const [color, setColor] = useState('white');
     const [move, setMove] = useState(0);
     const [showButtons, setShowButtons] = useState(false);
@@ -97,6 +97,7 @@ draw()
 
  
 squares[currentShooterIndex].className = ('shooter')
+squares[currentShooterIndex - 15].className = ('laser')
 
 // removing the invader class from a square in the grid, invader will no longer show up on the page
 const remove = () => {
@@ -272,19 +273,23 @@ const restartGame = (e) => {
 
 
 const shoot = (e) => {
-    results++
+    // results++
     
-    // let currentLaserIndex = currentShooterIndex + numMoves
-     let currentLaserIndex = (currentShooterIndex - numMoves)
+    let currentLaserIndex = currentShooterIndex - 15
+    // setCurrentLaserIndex(prevState => prevState - numMoves)
+    //  currentLaserIndex = (currentShooterIndex - numMoves)
      function moveLaser() {
         // squares[currentLaserIndex].classList.add('laser')
         console.log(squares[currentLaserIndex].classList)
         console.log(currentLaserIndex)
-        // console.log(squares)
+        console.log(squares)
         squares[currentLaserIndex].classList.remove('laser')
         // setLaser(prevState => prevState - width)
+        // setCurrentLaserIndex(prevState => prevState - width)
         currentLaserIndex -= width
         squares[currentLaserIndex].classList.add('laser')
+        // forceUpdate()
+        // remove()
         
 
         if (squares[currentLaserIndex].classList.contains('invader')) {
@@ -293,6 +298,7 @@ const shoot = (e) => {
             squares[currentLaserIndex].classList.add('boom')
 
             setTimeout(() => squares[currentLaserIndex].classList.remove('boom'), 300)
+            
             
             // console.log('shoot22')
             const alienRemoved = alienInvaders.indexOf(currentLaserIndex)
@@ -310,7 +316,7 @@ const shoot = (e) => {
             
             // setAlienInvaders(prevState => prevState)
         //   console.log("shooters");
-        }, 100);
+        }, 300);
         return () => clearInterval(laserId);
      }
 
@@ -375,11 +381,11 @@ function useKeyPress(targetKey) {
             <Grid >
                 
             
-            {squares.map((block) => {
+            {squares.map((block, index) => {
                 const {id, className, position} = block
                 // console.log(block)
                 return (
-                    <Square key={squares[block]} className={className} position={position} />
+                    <Square key={index} className={className} position={position} />
                     
                 ) 
             })} 
@@ -455,7 +461,8 @@ const Grid = styled.div`
     display: flex;
     flex-wrap: wrap;
     position: relative;
-    z-index: 100;
+   
+
 `
 
 const Square = styled.div`
@@ -487,20 +494,17 @@ const Square = styled.div`
     }
 
     &.laser {
-        background-color: rgb(217, 34, 2);
+        background-color: rgb(245, 126, 02);
         background-size: 100%;
         
     }
+
 
 
     width: 20px;
     height: 20px;
     background-color: rgb(44,43,42);
 
-    
-    
-
-  
 
 `
 
