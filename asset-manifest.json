@@ -1,0 +1,20 @@
+{
+  "files": {
+    "main.css": "/RetroLand/static/css/main.cd6cd66f.css",
+    "main.js": "/RetroLand/static/js/main.e4bb600c.js",
+    "static/js/787.1726a540.chunk.js": "/RetroLand/static/js/787.1726a540.chunk.js",
+    "static/media/breakout-2.svg": "/RetroLand/static/media/breakout-2.e36efd606b52e6c739c9dd8504373c89.svg",
+    "static/media/arcadeMachine.svg": "/RetroLand/static/media/arcadeMachine.9b3acdf23f4a58b5e5045f231bfdf7de.svg",
+    "static/media/rocket.svg": "/RetroLand/static/media/rocket.c612f7ccbe125f5af39e62707e11247b.svg",
+    "static/media/invader.svg": "/RetroLand/static/media/invader.9644ab1eb85d94a452c3ff9f28053fb6.svg",
+    "static/media/pause.svg": "/RetroLand/static/media/pause.7c0f80737bb5e639064c73b4624cefa6.svg",
+    "index.html": "/RetroLand/index.html",
+    "main.cd6cd66f.css.map": "/RetroLand/static/css/main.cd6cd66f.css.map",
+    "main.e4bb600c.js.map": "/RetroLand/static/js/main.e4bb600c.js.map",
+    "787.1726a540.chunk.js.map": "/RetroLand/static/js/787.1726a540.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.cd6cd66f.css",
+    "static/js/main.e4bb600c.js"
+  ]
+}
